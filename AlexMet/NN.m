@@ -9,6 +9,7 @@
 @import Metal;
 
 #import "NN.h"
+#import "Shapes.h"
 
 @implementation NN {
     id<MTLDevice> device;
@@ -457,7 +458,8 @@
         softmax(&in_copy[i * classes], &din[i * classes]);
         din[i * classes + Y[i]] -= 1;
     }
-    div_all(din, bs * classes, bs);
+    for (int i = 0; i < bs * classes; i++)
+        din[i] /= bs;
     free(in_copy);
 }
 
@@ -483,6 +485,27 @@
     MTLSize gridSize = MTLSizeMake(width, height, 1);
     [encoder dispatchThreads:gridSize threadsPerThreadgroup:threads];
     [encoder endEncoding];
+}
+
+void softmax(float* in, float* out) {
+    float e[1000];
+    float exp_sum = 0;
+
+    for (int i = 0; i < 1000; i++) {
+        e[i] = exp(in[i]);
+        exp_sum += e[i];
+    }
+    for (int i = 0; i < 1000; i++)
+        out[i] = e[i] / exp_sum;
+}
+
+void sub_max(float* in) {
+    float max = in[0];
+    for (int i = 1; i < 1000; i++)
+        if (in[i] > max)
+            max = in[i];
+    for (int i = 0; i < 1000; i++)
+        in[i] -= max;
 }
 
 @end

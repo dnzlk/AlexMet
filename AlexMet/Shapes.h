@@ -5,11 +5,17 @@
 //  Created by Denis Khabarov on 14.11.2024.
 //
 
+typedef struct {
+    unsigned int N, C, H, W;
+} Shape;
+
 #ifndef Shapes_h
 #define Shapes_h
 
-#import "Metal/Metal.h"
-#import "Generator.h"
+@import Metal;
+@class Generator;
+
+int n(Shape shape);
 
 @interface Shapes : NSObject
 

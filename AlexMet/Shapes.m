@@ -9,6 +9,10 @@
 #import "Shapes.h"
 #import "Generator.h"
 
+int n(Shape shape) {
+    return shape.N * shape.C * shape.H * shape.W;
+}
+
 @implementation Shapes
 
 - (instancetype)initWithGenerator:(Generator*)generator {

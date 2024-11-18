@@ -5,14 +5,13 @@
 //  Created by Denis Khabarov on 01.11.2024.
 //
 
-@import Metal;
-@import Foundation;
-
-#include "base.h"
+#import <Metal/Metal.h>
+#import <Foundation/Foundation.h>
 #import "Generator.h"
 #import "Shapes.h"
 #import "Variables.h"
 #import "NN.h"
+#import "IO.h"
 
 id<MTLBuffer> T(float* a, int R, int C, id<MTLDevice> device) {
     float* aT = malloc(R * C * sizeof(float));
@@ -33,37 +32,13 @@ int main(void) {
     Generator* generator = [[Generator alloc] initWithDevice:device];
     Shapes* shapes = [[Shapes alloc] initWithGenerator:generator];
     Variables* vars = [[Variables alloc] initWithGenerator:generator :shapes :device];
+    IO* io = [[IO alloc] initWithDevice:device];
 
     // MARK: - Load Data
 
-    MTLIOCommandQueueDescriptor* commandQueueDescriptor = [[MTLIOCommandQueueDescriptor alloc] init];
-    commandQueueDescriptor.type = MTLIOCommandQueueTypeConcurrent;
-    commandQueueDescriptor.priority = MTLIOPriorityHigh;
-
-    NSError* ioError = NULL;
-    id<MTLIOCommandQueue> ioCommandQueue = [device newIOCommandQueueWithDescriptor:commandQueueDescriptor error:&ioError];
-    id<MTLIOCommandBuffer> ioCommandBuffer = [ioCommandQueue commandBuffer];
-
-    NSString* currentDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
-    NSString* filePath = [currentDirectory stringByAppendingPathComponent:@"Xtr.bin"];
-    NSURL* fileURL = [NSURL fileURLWithPath:filePath];
-
-    id<MTLIOFileHandle> xtrHandle = [device newIOFileHandleWithURL:fileURL error:&ioError];
     id<MTLBuffer> x = [device newBufferWithLength:n(shapes.x)*sizeof(float) options:MTLResourceStorageModeShared];
-    [ioCommandBuffer loadBuffer:x
-                         offset:0
-                           size:n(shapes.x)*sizeof(float)
-                   sourceHandle:xtrHandle
-             sourceHandleOffset:0];
-
-    [ioCommandBuffer commit];
-    [ioCommandBuffer waitUntilCompleted];
-
-    // Currently random
-    int y[128] = {5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
-        5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
-        5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
-        5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2};
+    int y[128];
+    [io load_batch:n(shapes.x)*sizeof(float) :x :y];
 
     // MARK: - Training
 

@@ -8,7 +8,7 @@
 #ifndef NN_h
 #define NN_h
 
-#include "base.h"
+#include "Shapes.h"
 
 @interface NN : NSObject
 - (instancetype)initWithDevice:(id<MTLDevice>)_device :(id<MTLCommandQueue>)_commandQueue;
