@@ -33,12 +33,12 @@ kernel void conv(device const float* in [[buffer(0)]],
                  constant uint& s       [[buffer(6)]],
                  device float* out      [[buffer(7)]],
                  constant Shape& osh    [[buffer(8)]],
-                 uint3 _thread          [[thread_position_in_grid]]) {
-    if (_thread.y >= osh.H || _thread.x >= osh.W || _thread.z >= osh.C) return;
+                 uint3 gid              [[thread_position_in_grid]]) {
+    if (gid.y >= osh.H || gid.x >= osh.W || gid.z >= osh.C) return;
 
-    uint x = _thread.x;
-    uint y = _thread.y;
-    uint oc = _thread.z;
+    uint x = gid.x;
+    uint y = gid.y;
+    uint oc = gid.z;
 
     int in_y = y * s - p;
     int in_x = x * s - p;
@@ -72,11 +72,11 @@ kernel void conv_bw(device const float* in   [[buffer(0)]],
                     device float* din        [[buffer(9)]],
                     device atomic_float* dW  [[buffer(10)]],
                     device atomic_float* db  [[buffer(11)]],
-                    uint2 _thread            [[thread_position_in_grid]]) {
-    if (_thread.y >= osh.H || _thread.x >= osh.W) return;
+                    uint2 gid                [[thread_position_in_grid]]) {
+    if (gid.y >= osh.H || gid.x >= osh.W) return;
 
-    uint x  = _thread.x;
-    uint y  = _thread.y;
+    uint x  = gid.x;
+    uint y  = gid.y;
 
     int in_y = y * s - p;
     int in_x = x * s - p;
@@ -108,14 +108,14 @@ kernel void max_pool(device const float* in [[buffer(0)]],
                      device float* out      [[buffer(2)]],
                      constant Shape& osh    [[buffer(3)]],
                      device uint* idxs      [[buffer(4)]],
-                     uint3 _thread          [[thread_position_in_grid]]) {
-    if (_thread.y >= osh.H || _thread.x >= osh.W || _thread.z >= osh.C) return;
+                     uint3 gid              [[thread_position_in_grid]]) {
+    if (gid.y >= osh.H || gid.x >= osh.W || gid.z >= osh.C) return;
 
     uint k = 3;
     uint s = 2;
-    uint x = _thread.x;
-    uint y = _thread.y;
-    uint c = _thread.z;
+    uint x = gid.x;
+    uint y = gid.y;
+    uint c = gid.z;
     uint in_x = x * s;
     uint in_y = y * s;
 
@@ -152,8 +152,8 @@ kernel void max_pool_bw(device const float* dout [[buffer(0)]],
 kernel void lrn(device const float* in [[buffer(0)]],
                 constant Shape& insh   [[buffer(1)]],
                 device float* out      [[buffer(2)]],
-                uint3 _thread          [[thread_position_in_grid]]) {
-    if (_thread.y >= insh.H || _thread.x >= insh.W || _thread.z >= insh.N)
+                uint3 gid              [[thread_position_in_grid]]) {
+    if (gid.y >= insh.H || gid.x >= insh.W || gid.z >= insh.N)
         return;
 
     uint k = 2;
@@ -161,18 +161,18 @@ kernel void lrn(device const float* in [[buffer(0)]],
     float alpha = 0.0001;
     float beta = 0.75;
 
-    uint i = _thread.z;
+    uint i = gid.z;
 
     for (uint c = 0; c < insh.C; c++) {
-        uint point = index(insh, i, c, _thread.y, _thread.x);
+        uint point = index(insh, i, c, gid.y, gid.x);
 
         float sum = pow(in[point], 2);
 
         for (uint cl = 1; cl <= n / 2 && c - cl >= 0; cl++)
-            sum += pow(in[index(insh, i, c - cl, _thread.y, _thread.x)], 2);
+            sum += pow(in[index(insh, i, c - cl, gid.y, gid.x)], 2);
 
         for (uint cr = 1; cr <= n / 2 && c + cr < insh.C; cr++)
-            sum += pow(in[index(insh, i, c + cr, _thread.y, _thread.x)], 2);
+            sum += pow(in[index(insh, i, c + cr, gid.y, gid.x)], 2);
 
         float divider = k + alpha * sum;
         out[point] = in[point] / pow(divider, beta);
