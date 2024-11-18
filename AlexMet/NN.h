@@ -34,8 +34,6 @@
 - (void)max_pool
 :(id<MTLBuffer>)in
 :(id<MTLBuffer>)insh
-:(uint)k
-:(uint)s
 :(id<MTLBuffer>)out
 :(id<MTLBuffer>)osh_buffer
 :(Shape)osh
@@ -44,10 +42,6 @@
 - (void)lrn
 :(id<MTLBuffer>)in
 :(id<MTLBuffer>)insh
-:(uint)k
-:(uint)n
-:(float)alpha
-:(float)beta
 :(id<MTLBuffer>)out
 :(Shape)osh;
 
@@ -116,10 +110,6 @@
 - (void)lrn_bw
 :(id<MTLBuffer>)in
 :(id<MTLBuffer>)insh
-:(uint)k
-:(uint)n
-:(float)alpha
-:(float)beta
 :(id<MTLBuffer>)dout
 :(Shape)osh
 :(id<MTLBuffer>)din;
@@ -144,8 +134,6 @@
 :(uint)width
 :(uint)height
 :(float)lr
-:(float)momentum
-:(float)decay
 :(id<MTLCommandBuffer>) commandBuffer;
 
 @end

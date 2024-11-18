@@ -14,36 +14,29 @@
 - (instancetype)initWithGenerator:(Generator*)generator {
     self = [super init];
 
-    _bs = 128;
+    _bs = 1;
     _classes = 1000;
-    _epochs = 10;
 
     _lr = 0.0001;
-    _momentum = 0.9;
-    _decay = 0.0005;
 
     _c1_k = 11; _c1_p = 3; _c1_s = 4;
     _c2_k = 5; _c2_p = 2; _c2_s = 1;
     _c345_k = 3; _c345_p = 1; _c345_s = 1;
 
-    _m_k = 3; _m_s = 2;
-    _lrn_k = 2; _lrn_n = 5;
-    _lrn_alpha = 0.0001f; _lrn_beta = 0.75f;
-
     _x = [self create:_bs :3 :227 :227];
 
     uint c1H = [self s_conv:227 :_c1_k :_c1_p :_c1_s];
     uint c1W = [self s_conv:227 :_c1_k :_c1_p :_c1_s];
-    uint m1H = [self s_max_pool:c1H :_m_k :_m_s];
-    uint m1W = [self s_max_pool:c1W :_m_k :_m_s];
+    uint m1H = [self s_max_pool:c1H];
+    uint m1W = [self s_max_pool:c1W];
     _c1 = [self create:_bs :96 :c1H :c1W];
     _w1 = [self create:3 :96 :_c1_k :_c1_k];
     _m1 = [self create:_bs :96 :m1H :m1W];
 
     uint c2H = [self s_conv:m1H :_c2_k :_c2_p :_c2_s];
     uint c2W = [self s_conv:m1W :_c2_k :_c2_p :_c2_s];
-    uint m2H = [self s_max_pool:c2H :_m_k :_m_s];
-    uint m2W = [self s_max_pool:c2W :_m_k :_m_s];
+    uint m2H = [self s_max_pool:c2H];
+    uint m2W = [self s_max_pool:c2W];
     _c2 = [self create:_bs :256 :c2H :c2W];
     _w2 = [self create:96 :256 :_c2_k :_c2_k];
     _m2 = [self create:_bs :256 :m2H :m2W];
@@ -57,8 +50,8 @@
 
     uint c5H = [self s_conv:c3H :_c345_k :_c345_p :_c345_s];
     uint c5W = [self s_conv:c3W :_c345_k :_c345_p :_c345_s];
-    uint m5H = [self s_max_pool:c5H :_m_k :_m_s];
-    uint m5W = [self s_max_pool:c5W :_m_k :_m_s];
+    uint m5H = [self s_max_pool:c5H];
+    uint m5W = [self s_max_pool:c5W];
     _c5 = [self create:_bs :256 :c5H :c5W];
     _w5 = [self create:384 :256 :_c345_k :_c345_k];
     _m5 = [self create:_bs :256 :m5H :m5W];
@@ -96,7 +89,9 @@
     return (side - k + 2*p)/s + 1;
 }
 
-- (uint)s_max_pool :(uint)side :(uint)k :(uint)s {
+- (uint)s_max_pool :(uint)side {
+    uint k = 3;
+    uint s = 2;
     return ((side - k) / s) + 1;
 }
 

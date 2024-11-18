@@ -9,7 +9,6 @@
 @import Foundation;
 
 #include "base.h"
-
 #import "Generator.h"
 #import "Shapes.h"
 #import "Variables.h"
@@ -60,6 +59,7 @@ int main(void) {
     [ioCommandBuffer commit];
     [ioCommandBuffer waitUntilCompleted];
 
+    // Currently random
     int y[128] = {5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
         5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
         5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
@@ -69,7 +69,7 @@ int main(void) {
 
     NN* nn = [[NN alloc] initWithDevice:device :commandQueue];
 
-    for (int epoch = 0; epoch < shapes.epochs; epoch++) {
+    for (int epoch = 0; epoch < 10; epoch++) {
 
         size_t epoch_timer = time(0);
 
@@ -78,14 +78,14 @@ int main(void) {
         // 1
         [nn conv:x :shapes.xBuffer :vars.w1 :vars.b1 :shapes.c1_k :shapes.c1_p :shapes.c1_s :vars.c1 :shapes.c1 :shapes.c1Buffer];
         [nn relu:vars.c1 :vars.r1 :shapes.c1.N * shapes.c1.C :shapes.c1.H * shapes.c1.W];
-        [nn max_pool:vars.r1 :shapes.c1Buffer :shapes.m_k :shapes.m_s :vars.m1 :shapes.m1Buffer :shapes.m1 :vars.m1_idxs];
-        [nn lrn:vars.m1 :shapes.m1Buffer :shapes.lrn_k :shapes.lrn_n :shapes.lrn_alpha :shapes.lrn_beta :vars.n1 :shapes.m1];
+        [nn max_pool:vars.r1 :shapes.c1Buffer :vars.m1 :shapes.m1Buffer :shapes.m1 :vars.m1_idxs];
+        [nn lrn:vars.m1 :shapes.m1Buffer :vars.n1 :shapes.m1];
 
         // 2
         [nn conv:vars.n1 :shapes.m1Buffer :vars.w2 :vars.b2 :shapes.c2_k :shapes.c2_p :shapes.c2_s :vars.c2 :shapes.c2 :shapes.c2Buffer];
         [nn relu:vars.c2 :vars.r2 :shapes.c2.N * shapes.c2.C :shapes.c2.H * shapes.c2.W];
-        [nn max_pool:vars.r2 :shapes.c2Buffer :shapes.m_k :shapes.m_s :vars.m2 :shapes.m2Buffer :shapes.m2 :vars.m2_idxs];
-        [nn lrn:vars.m2 :shapes.m2Buffer :shapes.lrn_k :shapes.lrn_n :shapes.lrn_alpha :shapes.lrn_beta :vars.n2 :shapes.m2];
+        [nn max_pool:vars.r2 :shapes.c2Buffer :vars.m2 :shapes.m2Buffer :shapes.m2 :vars.m2_idxs];
+        [nn lrn:vars.m2 :shapes.m2Buffer :vars.n2 :shapes.m2];
 
         // 3
         [nn conv:vars.n2 :shapes.m2Buffer :vars.w3 :vars.b3 :shapes.c345_k :shapes.c345_p :shapes.c345_s :vars.c3 :shapes.c3 :shapes.c3Buffer];
@@ -98,7 +98,7 @@ int main(void) {
         // 5
         [nn conv:vars.r4 :shapes.c4Buffer :vars.w5 :vars.b5 :shapes.c345_k :shapes.c345_p :shapes.c345_s :vars.c5 :shapes.c5 :shapes.c5Buffer];
         [nn relu:vars.c5 :vars.r5 :shapes.c5.N * shapes.c5.C :shapes.c5.H * shapes.c5.W];
-        [nn max_pool:vars.r5 :shapes.c5Buffer :shapes.m_k :shapes.m_s :vars.m5 :shapes.m5Buffer :shapes.m5 :vars.m5_idxs];
+        [nn max_pool:vars.r5 :shapes.c5Buffer :vars.m5 :shapes.m5Buffer :shapes.m5 :vars.m5_idxs];
         [nn dropout :vars.m5 :vars.d5 :shapes.m5.N * shapes.m5.C :shapes.m5.H * shapes.m5.W];
 
         // 6
@@ -187,7 +187,7 @@ int main(void) {
         bw_timer = time(0);
 
         // 2
-        [nn lrn_bw:vars.m2 :shapes.m2Buffer :shapes.lrn_k :shapes.lrn_n :shapes.lrn_alpha :shapes.lrn_beta :vars.dn2 :shapes.m2 :vars.dm2];
+        [nn lrn_bw:vars.m2 :shapes.m2Buffer :vars.dn2 :shapes.m2 :vars.dm2];
         [nn max_pool_bw:vars.dm2 :shapes.m2Buffer :shapes.m2 :vars.m2_idxs :vars.dr2];
         [nn relu_bw:vars.c2 :shapes.c2.N * shapes.c2.C :shapes.c2.H * shapes.c2.W :vars.dr2 :vars.dc2];
         [nn conv_bw:vars.n1 :shapes.m1Buffer :vars.w2 :vars.b2 :shapes.c2_k :shapes.c2_p :shapes.c2_s :vars.dc2 :shapes.c2 :shapes.c2Buffer :vars.dn1 :vars.dw2 :vars.db2];
@@ -196,7 +196,7 @@ int main(void) {
         bw_timer = time(0);
 
         // 1
-        [nn lrn_bw:vars.m1 :shapes.m1Buffer :shapes.lrn_k :shapes.lrn_n :shapes.lrn_alpha :shapes.lrn_beta :vars.dn1 :shapes.m1 :vars.dm1];
+        [nn lrn_bw:vars.m1 :shapes.m1Buffer :vars.dn1 :shapes.m1 :vars.dm1];
         [nn max_pool_bw:vars.dm1 :shapes.m1Buffer :shapes.m1 :vars.m1_idxs :vars.dr1];
         [nn relu_bw:vars.c1 :shapes.c1.N * shapes.c1.C :shapes.c1.H * shapes.c1.W :vars.dr1 :vars.dc1];
         [nn conv_bw:x :shapes.xBuffer :vars.w1 :vars.b1 :shapes.c1_k :shapes.c1_p :shapes.c1_s :vars.dc1 :shapes.c1 :shapes.c1Buffer :vars.dx :vars.dw1 :vars.db1];
@@ -211,23 +211,23 @@ int main(void) {
 
         id<MTLCommandBuffer> sgdBuffer = [commandQueue commandBuffer];
 
-        [nn sgd:vars.w1 :vars.dw1 :vars.v_w1 :shapes.w1.N * shapes.w1.C :shapes.w1.H * shapes.w1.W :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.w2 :vars.dw2 :vars.v_w2 :shapes.w2.N * shapes.w2.C :shapes.w2.H * shapes.w2.W :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.w3 :vars.dw3 :vars.v_w3 :shapes.w3.N * shapes.w3.C :shapes.w3.H * shapes.w3.W :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.w4 :vars.dw4 :vars.v_w4 :shapes.w4.N * shapes.w4.C :shapes.w4.H * shapes.w4.W :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.w5 :vars.dw5 :vars.v_w5 :shapes.w5.N * shapes.w5.C :shapes.w5.H * shapes.w5.W :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.w6 :vars.dw6 :vars.v_w6 :shapes.m5.C * shapes.m5.H * shapes.m5.W :4096 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.w7 :vars.dw7 :vars.v_w7 :4096 :4096 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.w8 :vars.dw8 :vars.v_w8 :4096 :1000 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
+        [nn sgd:vars.w1 :vars.dw1 :vars.v_w1 :shapes.w1.N * shapes.w1.C :shapes.w1.H * shapes.w1.W :shapes.lr :sgdBuffer];
+        [nn sgd:vars.w2 :vars.dw2 :vars.v_w2 :shapes.w2.N * shapes.w2.C :shapes.w2.H * shapes.w2.W :shapes.lr :sgdBuffer];
+        [nn sgd:vars.w3 :vars.dw3 :vars.v_w3 :shapes.w3.N * shapes.w3.C :shapes.w3.H * shapes.w3.W :shapes.lr :sgdBuffer];
+        [nn sgd:vars.w4 :vars.dw4 :vars.v_w4 :shapes.w4.N * shapes.w4.C :shapes.w4.H * shapes.w4.W :shapes.lr :sgdBuffer];
+        [nn sgd:vars.w5 :vars.dw5 :vars.v_w5 :shapes.w5.N * shapes.w5.C :shapes.w5.H * shapes.w5.W :shapes.lr :sgdBuffer];
+        [nn sgd:vars.w6 :vars.dw6 :vars.v_w6 :shapes.m5.C * shapes.m5.H * shapes.m5.W :4096 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.w7 :vars.dw7 :vars.v_w7 :4096 :4096 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.w8 :vars.dw8 :vars.v_w8 :4096 :1000 :shapes.lr :sgdBuffer];
 
-        [nn sgd:vars.b1 :vars.db1 :vars.v_b1 :12 :8 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.b2 :vars.db2 :vars.v_b2 :16 :16 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.b3 :vars.db3 :vars.v_b3 :24 :16 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.b4 :vars.db4 :vars.v_b4 :24 :16 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.b5 :vars.db5 :vars.v_b5 :16 :16 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.b6 :vars.db6 :vars.v_b6 :64 :64 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.b7 :vars.db7 :vars.v_b7 :64 :64 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
-        [nn sgd:vars.b8 :vars.db8 :vars.v_b8 :10 :100 :shapes.lr :shapes.momentum :shapes.decay :sgdBuffer];
+        [nn sgd:vars.b1 :vars.db1 :vars.v_b1 :12 :8 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.b2 :vars.db2 :vars.v_b2 :16 :16 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.b3 :vars.db3 :vars.v_b3 :24 :16 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.b4 :vars.db4 :vars.v_b4 :24 :16 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.b5 :vars.db5 :vars.v_b5 :16 :16 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.b6 :vars.db6 :vars.v_b6 :64 :64 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.b7 :vars.db7 :vars.v_b7 :64 :64 :shapes.lr :sgdBuffer];
+        [nn sgd:vars.b8 :vars.db8 :vars.v_b8 :10 :100 :shapes.lr :sgdBuffer];
 
         [sgdBuffer commit];
         [sgdBuffer waitUntilCompleted];

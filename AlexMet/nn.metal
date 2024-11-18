@@ -105,20 +105,19 @@ kernel void conv_bw(device const float* in   [[buffer(0)]],
 
 kernel void max_pool(device const float* in [[buffer(0)]],
                      constant Shape& insh   [[buffer(1)]],
-                     constant uint& k       [[buffer(2)]],
-                     constant uint& s       [[buffer(3)]],
-                     device float* out      [[buffer(4)]],
-                     constant Shape& osh    [[buffer(5)]],
-                     device uint* idxs      [[buffer(6)]],
+                     device float* out      [[buffer(2)]],
+                     constant Shape& osh    [[buffer(3)]],
+                     device uint* idxs      [[buffer(4)]],
                      uint3 _thread          [[thread_position_in_grid]]) {
     if (_thread.y >= osh.H || _thread.x >= osh.W || _thread.z >= osh.C) return;
 
-    uint y = _thread.y;
+    uint k = 3;
+    uint s = 2;
     uint x = _thread.x;
+    uint y = _thread.y;
     uint c = _thread.z;
-
-    uint in_y = y * s;
     uint in_x = x * s;
+    uint in_y = y * s;
 
     for (uint n = 0; n < osh.N; n++) {
         uint max_index = index(insh, n, c, in_y, in_x);
@@ -152,14 +151,15 @@ kernel void max_pool_bw(device const float* dout [[buffer(0)]],
 
 kernel void lrn(device const float* in [[buffer(0)]],
                 constant Shape& insh   [[buffer(1)]],
-                constant uint& k       [[buffer(2)]],
-                constant uint& n       [[buffer(3)]],
-                constant float& alpha  [[buffer(4)]],
-                constant float& beta   [[buffer(5)]],
-                device float* out      [[buffer(6)]],
+                device float* out      [[buffer(2)]],
                 uint3 _thread          [[thread_position_in_grid]]) {
     if (_thread.y >= insh.H || _thread.x >= insh.W || _thread.z >= insh.N)
         return;
+
+    uint k = 2;
+    uint n = 5;
+    float alpha = 0.0001;
+    float beta = 0.75;
 
     uint i = _thread.z;
 
@@ -181,13 +181,14 @@ kernel void lrn(device const float* in [[buffer(0)]],
 
 kernel void lrn_bw(device const float* in [[buffer(0)]],
                    constant Shape& insh   [[buffer(1)]],
-                   constant uint& k       [[buffer(2)]],
-                   constant uint& n       [[buffer(3)]],
-                   constant float& alpha  [[buffer(4)]],
-                   constant float& beta   [[buffer(5)]],
-                   device float* dout     [[buffer(6)]],
-                   device float* din      [[buffer(7)]],
+                   device float* dout     [[buffer(2)]],
+                   device float* din      [[buffer(3)]],
                    uint2 gid              [[thread_position_in_grid]]) {
+    uint k = 2;
+    uint n = 5;
+    float alpha = 0.0001;
+    float beta = 0.75;
+
     for (uint i = 0; i < insh.N; i++) {
         for (uint c = 0; c < insh.C; c++) {
             uint point = index(insh, n, c, gid.y, gid.x);
@@ -214,7 +215,7 @@ kernel void relu(device const float* in [[buffer(0)]],
                  device float* out      [[buffer(2)]],
                  uint2 gid              [[thread_position_in_grid]]) {
     uint index = gid.y * width + gid.x;
-    out[index] = in[index] > 0.0f ? in[index] : 0.0f;
+    out[index] = in[index] > 0 ? in[index] : 0;
 }
 
 kernel void relu_bw(device const float* in   [[buffer(0)]],
@@ -276,10 +277,8 @@ kernel void sgd(device float* w          [[buffer(0)]],
                 device float* v          [[buffer(2)]],
                 constant uint& width     [[buffer(3)]],
                 constant float& lr       [[buffer(4)]],
-                constant float& momentum [[buffer(5)]],
-                constant float& decay    [[buffer(6)]],
                 uint2 gid                [[thread_position_in_grid]]) {
     uint index = gid.y * width + gid.x;
-    v[index] = momentum * v[index] - decay * lr * w[index] - lr * dw[index];
+    v[index] = 0.9 * v[index] - 0.0005 * lr * w[index] - lr * dw[index];
     w[index] += v[index];
 }

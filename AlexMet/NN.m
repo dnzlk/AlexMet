@@ -209,8 +209,6 @@
 - (void)max_pool
 :(id<MTLBuffer>)in
 :(id<MTLBuffer>)insh
-:(uint)k
-:(uint)s
 :(id<MTLBuffer>)out
 :(id<MTLBuffer>)osh_buffer
 :(Shape)osh
@@ -221,11 +219,9 @@
     [encoder setComputePipelineState:mpFunctionPSO];
     [encoder setBuffer:in offset:0 atIndex:0];
     [encoder setBuffer:insh offset:0 atIndex:1];
-    [encoder setBytes:&k length:sizeof(uint) atIndex:2];
-    [encoder setBytes:&s length:sizeof(uint) atIndex:3];
-    [encoder setBuffer:out offset:0 atIndex:4];
-    [encoder setBuffer:osh_buffer offset:0 atIndex:5];
-    [encoder setBuffer:idxs offset:0 atIndex:6];
+    [encoder setBuffer:out offset:0 atIndex:2];
+    [encoder setBuffer:osh_buffer offset:0 atIndex:3];
+    [encoder setBuffer:idxs offset:0 atIndex:4];
     u_long w = mpFunctionPSO.threadExecutionWidth;
     u_long h = mpFunctionPSO.maxTotalThreadsPerThreadgroup / w;
     MTLSize threads = MTLSizeMake(w, h, 1);
@@ -263,10 +259,6 @@
 - (void)lrn
 :(id<MTLBuffer>)in
 :(id<MTLBuffer>)insh
-:(uint)k
-:(uint)n
-:(float)alpha
-:(float)beta
 :(id<MTLBuffer>)out
 :(Shape)osh 
 {
@@ -275,11 +267,7 @@
     [encoder setComputePipelineState:lrnFunctionPSO];
     [encoder setBuffer:in offset:0 atIndex:0];
     [encoder setBuffer:insh offset:0 atIndex:1];
-    [encoder setBytes:&k length:sizeof(uint) atIndex:2];
-    [encoder setBytes:&n length:sizeof(uint) atIndex:3];
-    [encoder setBytes:&alpha length:sizeof(float) atIndex:4];
-    [encoder setBytes:&beta length:sizeof(float) atIndex:5];
-    [encoder setBuffer:out offset:0 atIndex:6];
+    [encoder setBuffer:out offset:0 atIndex:2];
     u_long w = lrnFunctionPSO.threadExecutionWidth;
     u_long h = lrnFunctionPSO.maxTotalThreadsPerThreadgroup / w;
     MTLSize threads = MTLSizeMake(w, h, 1);
@@ -293,10 +281,6 @@
 - (void)lrn_bw
 :(id<MTLBuffer>)in
 :(id<MTLBuffer>)insh
-:(uint)k
-:(uint)n
-:(float)alpha
-:(float)beta
 :(id<MTLBuffer>)dout
 :(Shape)osh
 :(id<MTLBuffer>)din
@@ -306,12 +290,8 @@
     [encoder setComputePipelineState:lrnBWFunctionPSO];
     [encoder setBuffer:in offset:0 atIndex:0];
     [encoder setBuffer:insh offset:0 atIndex:1];
-    [encoder setBytes:&k length:sizeof(uint) atIndex:2];
-    [encoder setBytes:&n length:sizeof(uint) atIndex:3];
-    [encoder setBytes:&alpha length:sizeof(float) atIndex:4];
-    [encoder setBytes:&beta length:sizeof(float) atIndex:5];
-    [encoder setBuffer:dout offset:0 atIndex:6];
-    [encoder setBuffer:din offset:0 atIndex:7];
+    [encoder setBuffer:dout offset:0 atIndex:2];
+    [encoder setBuffer:din offset:0 atIndex:3];
     u_long w = lrnBWFunctionPSO.threadExecutionWidth;
     u_long h = lrnBWFunctionPSO.maxTotalThreadsPerThreadgroup / w;
     MTLSize threads = MTLSizeMake(w, h, 1);
@@ -488,8 +468,6 @@
 :(uint)width
 :(uint)height
 :(float)lr
-:(float)momentum
-:(float)decay
 :(id<MTLCommandBuffer>) commandBuffer
 {
     id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
@@ -499,8 +477,6 @@
     [encoder setBuffer:v offset:0 atIndex:2];
     [encoder setBytes:&width length:sizeof(uint) atIndex:3];
     [encoder setBytes:&lr length:sizeof(float) atIndex:4];
-    [encoder setBytes:&momentum length:sizeof(float) atIndex:5];
-    [encoder setBytes:&decay length:sizeof(float) atIndex:6];
     u_long w = sgdFunctionPSO.threadExecutionWidth;
     u_long h = sgdFunctionPSO.maxTotalThreadsPerThreadgroup / w;
     MTLSize threads = MTLSizeMake(w, h, 1);

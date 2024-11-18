@@ -17,15 +17,11 @@
 
 @property(nonatomic, assign, readonly) uint bs;
 @property(nonatomic, assign, readonly) uint classes;
-@property(nonatomic, assign, readonly) uint epochs;
-@property(nonatomic, assign, readonly) float lr, momentum, decay;
+@property(nonatomic, assign, readonly) float lr;
 
 @property(nonatomic, assign, readonly) uint c1_k, c1_p, c1_s;
 @property(nonatomic, assign, readonly) uint c2_k, c2_p, c2_s;
 @property(nonatomic, assign, readonly) uint c345_k, c345_p, c345_s;
-@property(nonatomic, assign, readonly) uint m_k, m_s;
-@property(nonatomic, assign, readonly) uint lrn_k, lrn_n;
-@property(nonatomic, assign, readonly) float lrn_alpha, lrn_beta;
 
 @property(nonatomic, assign, readonly) Shape x;
 @property(nonatomic, assign, readonly) Shape c1, w1 , m1;
