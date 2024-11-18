@@ -18,9 +18,7 @@ int n(Shape shape) {
 - (instancetype)initWithGenerator:(Generator*)generator {
     self = [super init];
 
-    _bs = 1;
-    _classes = 1000;
-
+    _bs = 1; // Batch Size
     _lr = 0.0001;
 
     _c1_k = 11; _c1_p = 3; _c1_s = 4;
@@ -68,7 +66,7 @@ int n(Shape shape) {
     _w7 = 4096 * 4096;
     _b7 = 4096;
 
-    _fc8 = _bs * _classes;
+    _fc8 = _bs * 1000;
     _w8 = 4096 * 1000;
     _b8 = 1000;
 

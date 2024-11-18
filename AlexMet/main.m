@@ -93,9 +93,9 @@ int main(void) {
 
         // 9
 
-        float loss = [nn cross_entropy:v.r8.contents :y :s.bs :s.classes];
+        float loss = [nn cross_entropy:v.r8.contents :y :s.bs];
 
-        printf("Metal loss is %f\n", loss);
+        printf("Loss is %f\n", loss);
         printf("Forward pass took %lu s\n", time(0) - epoch_timer);
 
         // MARK: - Backward Pass
@@ -104,7 +104,7 @@ int main(void) {
         size_t bw_timer = time(0);
 
         // 9
-        [nn cross_entropy_bw:v.r8.contents :y :s.bs :s.classes :v.dr8.contents];
+        [nn cross_entropy_bw:v.r8.contents :y :s.bs :v.dr8.contents];
 
         printf("9 took %lu s\n", time(0) - bw_timer);
         bw_timer = time(0);

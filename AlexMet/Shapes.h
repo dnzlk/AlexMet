@@ -22,7 +22,6 @@ int n(Shape shape);
 - (instancetype) initWithGenerator:(Generator*)generator;
 
 @property(nonatomic, assign, readonly) uint bs;
-@property(nonatomic, assign, readonly) uint classes;
 @property(nonatomic, assign, readonly) float lr;
 
 @property(nonatomic, assign, readonly) uint c1_k, c1_p, c1_s;

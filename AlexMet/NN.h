@@ -117,14 +117,12 @@
 - (float)cross_entropy
 :(float*)in
 :(int*)Y
-:(int)bs
-:(int)classes;
+:(int)bs;
 
 - (void)cross_entropy_bw
 :(float*)in
 :(int*)Y
 :(int)bs
-:(int)classes
 :(float*)din;
 
 - (void)sgd

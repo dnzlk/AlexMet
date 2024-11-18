@@ -423,17 +423,16 @@
 :(float*)in
 :(int*)Y
 :(int)bs
-:(int)classes
 {
-    float* in_copy = malloc(bs * classes * sizeof(float));
-    memcpy(in_copy, in, bs * classes * sizeof(float));
+    float* in_copy = malloc(bs * 1000 * sizeof(float));
+    memcpy(in_copy, in, bs * 1000 * sizeof(float));
 
     float mean_sum = 0.0;
     for (int i = 0; i < bs; i++) {
-        sub_max(&in_copy[i * classes]);
+        sub_max(&in_copy[i * 1000]);
 
-        float probs[classes];
-        softmax(&in_copy[i * classes], probs);
+        float probs[1000];
+        softmax(&in_copy[i * 1000], probs);
 
         float predicted_prob = -log(probs[Y[i]]);
         mean_sum += predicted_prob;
@@ -446,19 +445,18 @@
 :(float*)in
 :(int*)Y
 :(int)bs
-:(int)classes
 :(float*)din
 {
-    float* in_copy = malloc(bs * classes * sizeof(float));
-    memcpy(in_copy, in, bs * classes * sizeof(float));
+    float* in_copy = malloc(bs * 1000 * sizeof(float));
+    memcpy(in_copy, in, bs * 1000 * sizeof(float));
 
     for (int i = 0; i < bs; i++) {
-        sub_max(&in_copy[i * classes]);
+        sub_max(&in_copy[i * 1000]);
 
-        softmax(&in_copy[i * classes], &din[i * classes]);
-        din[i * classes + Y[i]] -= 1;
+        softmax(&in_copy[i * 1000], &din[i * 1000]);
+        din[i * 1000 + Y[i]] -= 1;
     }
-    for (int i = 0; i < bs * classes; i++)
+    for (int i = 0; i < bs * 1000; i++)
         din[i] /= bs;
     free(in_copy);
 }
