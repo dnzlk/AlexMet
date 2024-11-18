@@ -17,7 +17,6 @@
 - (instancetype)initWithDevice:(id<MTLDevice>)_device {
     self = [super init];
     device = _device;
-
     return self;
 }
 

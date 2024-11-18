@@ -16,7 +16,6 @@
 - (instancetype)initWithDevice:(id<MTLDevice>)_device {
     self = [super init];
     device = _device;
-
     return self;
 }
 
@@ -30,6 +29,7 @@
     return;
 }
 
+// Temporary random
 - (void)load_batch:(int)n :(id<MTLBuffer>)x :(int*)y {
     MTLIOCommandQueueDescriptor* commandQueueDescriptor = [[MTLIOCommandQueueDescriptor alloc] init];
     commandQueueDescriptor.type = MTLIOCommandQueueTypeConcurrent;
@@ -53,7 +53,6 @@
     [ioCommandBuffer commit];
     [ioCommandBuffer waitUntilCompleted];
 
-    // Temporaly random
     int random_y[128] = {5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
         5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,
         5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2, 5, 1, 2, 3, 5, 4, 3, 2,

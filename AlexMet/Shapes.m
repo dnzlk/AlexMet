@@ -72,7 +72,7 @@ int n(Shape shape) {
     _w8 = 4096 * 1000;
     _b8 = 1000;
 
-    _xBuffer =  [generator shape_buffer:_x   :@"xshBuffer"];
+    _xBuffer =  [generator shape_buffer:_x  :@"xshBuffer"];
     _c1Buffer = [generator shape_buffer:_c1 :@"c1shBuffer"];
     _m1Buffer = [generator shape_buffer:_m1 :@"m1shBuffer"];
     _c2Buffer = [generator shape_buffer:_c2 :@"c2shBuffer"];
@@ -85,15 +85,15 @@ int n(Shape shape) {
     return self;
 }
 
-- (Shape)create :(uint)N :(uint)C :(uint)H :(uint)W {
+- (Shape)create:(uint)N :(uint)C :(uint)H :(uint)W {
     return (Shape){N, C, H, W};
 }
 
-- (uint)s_conv :(uint)side :(uint)k :(uint)p :(uint)s {
+- (uint)s_conv:(uint)side :(uint)k :(uint)p :(uint)s {
     return (side - k + 2*p)/s + 1;
 }
 
-- (uint)s_max_pool :(uint)side {
+- (uint)s_max_pool:(uint)side {
     uint k = 3;
     uint s = 2;
     return ((side - k) / s) + 1;
