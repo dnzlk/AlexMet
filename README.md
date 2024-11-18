@@ -1,3 +1,5 @@
+![Metal logo](https://github.com/dnzlk/AlexMet/blob/main/metal.jpg)
+
 **Disclaimer**\
 This is not an ultimate deep learning framework for any possible task. It is an implementation of a certain architecture so it was implemented with a certain architecture in mind.
 
