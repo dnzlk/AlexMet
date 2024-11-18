@@ -29,7 +29,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6383B7922CD508850005A281 /* AlexNetC+Metal */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "AlexNetC+Metal"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6383B7922CD508850005A281 /* AlexMet */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AlexMet; sourceTree = BUILT_PRODUCTS_DIR; };
 		6383B7952CD508850005A281 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6383B79C2CD508A40005A281 /* nn.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = nn.metal; sourceTree = "<group>"; };
 		6383B7A42CD5F61B0005A281 /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 		6383B7892CD508850005A281 = {
 			isa = PBXGroup;
 			children = (
-				6383B7942CD508850005A281 /* AlexNetC+Metal */,
+				6383B7942CD508850005A281 /* AlexMet */,
 				6383B7932CD508850005A281 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,12 +66,12 @@
 		6383B7932CD508850005A281 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6383B7922CD508850005A281 /* AlexNetC+Metal */,
+				6383B7922CD508850005A281 /* AlexMet */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6383B7942CD508850005A281 /* AlexNetC+Metal */ = {
+		6383B7942CD508850005A281 /* AlexMet */ = {
 			isa = PBXGroup;
 			children = (
 				6383B7A72CD5F61B0005A281 /* base.c */,
@@ -87,15 +87,15 @@
 				63F4B48E2CE63DE500E5CC9B /* Variables.m */,
 				6383B79C2CD508A40005A281 /* nn.metal */,
 			);
-			path = "AlexNetC+Metal";
+			path = AlexMet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6383B7912CD508850005A281 /* AlexNetC+Metal */ = {
+		6383B7912CD508850005A281 /* AlexMet */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6383B7992CD508850005A281 /* Build configuration list for PBXNativeTarget "AlexNetC+Metal" */;
+			buildConfigurationList = 6383B7992CD508850005A281 /* Build configuration list for PBXNativeTarget "AlexMet" */;
 			buildPhases = (
 				6383B78E2CD508850005A281 /* Sources */,
 				6383B78F2CD508850005A281 /* Frameworks */,
@@ -105,9 +105,9 @@
 			);
 			dependencies = (
 			);
-			name = "AlexNetC+Metal";
+			name = AlexMet;
 			productName = "AlexNetC+Metal";
-			productReference = 6383B7922CD508850005A281 /* AlexNetC+Metal */;
+			productReference = 6383B7922CD508850005A281 /* AlexMet */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -124,7 +124,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6383B78D2CD508850005A281 /* Build configuration list for PBXProject "AlexNetC+Metal" */;
+			buildConfigurationList = 6383B78D2CD508850005A281 /* Build configuration list for PBXProject "AlexMet" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -137,7 +137,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6383B7912CD508850005A281 /* AlexNetC+Metal */,
+				6383B7912CD508850005A281 /* AlexMet */,
 			);
 		};
 /* End PBXProject section */
@@ -298,7 +298,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6383B78D2CD508850005A281 /* Build configuration list for PBXProject "AlexNetC+Metal" */ = {
+		6383B78D2CD508850005A281 /* Build configuration list for PBXProject "AlexMet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6383B7972CD508850005A281 /* Debug */,
@@ -307,7 +307,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6383B7992CD508850005A281 /* Build configuration list for PBXNativeTarget "AlexNetC+Metal" */ = {
+		6383B7992CD508850005A281 /* Build configuration list for PBXNativeTarget "AlexMet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6383B79A2CD508850005A281 /* Debug */,

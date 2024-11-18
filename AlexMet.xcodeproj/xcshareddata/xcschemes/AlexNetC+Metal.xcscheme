@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6383B7912CD508850005A281"
-               BuildableName = "AlexNetC+Metal"
-               BlueprintName = "AlexNetC+Metal"
-               ReferencedContainer = "container:AlexNetC+Metal.xcodeproj">
+               BuildableName = "AlexMet"
+               BlueprintName = "AlexMet"
+               ReferencedContainer = "container:AlexMet.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,9 +46,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6383B7912CD508850005A281"
-            BuildableName = "AlexNetC+Metal"
-            BlueprintName = "AlexNetC+Metal"
-            ReferencedContainer = "container:AlexNetC+Metal.xcodeproj">
+            BuildableName = "AlexMet"
+            BlueprintName = "AlexMet"
+            ReferencedContainer = "container:AlexMet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,9 +63,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6383B7912CD508850005A281"
-            BuildableName = "AlexNetC+Metal"
-            BlueprintName = "AlexNetC+Metal"
-            ReferencedContainer = "container:AlexNetC+Metal.xcodeproj">
+            BuildableName = "AlexMet"
+            BlueprintName = "AlexMet"
+            ReferencedContainer = "container:AlexMet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
